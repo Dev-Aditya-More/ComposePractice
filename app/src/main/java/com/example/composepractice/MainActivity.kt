@@ -4,59 +4,49 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.composepractice.ui.theme.ComposePracticeTheme
-import androidx.compose.ui.graphics.graphicsLayer
-import android.graphics.RenderEffect
-import android.graphics.Shader
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.asComposeRenderEffect
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.composepractice.ui.theme.ComposePracticeTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -295,85 +285,334 @@ fun App(modifier: Modifier = Modifier) {
 //    }
 
     // Text styling and state management
+//
+//    val quotes = listOf(
+//        "Believe you can and you're halfway there." to "- Theodore Roosevelt",
+//        "Everything you can imagine is real." to "- Pablo Picasso",
+//        "Do what you can, with what you have, where you are." to "- T. Roosevelt",
+//        "What we think, we become." to "- Buddha"
+//    )
+//
+//    var currentQuote by remember { mutableStateOf(quotes.random()) }
+//    var lastQuote by remember { mutableStateOf(currentQuote) }
+//
+//    val alpha by animateFloatAsState(
+//        targetValue = if (currentQuote != lastQuote) 0f else 1f,
+//        animationSpec = tween(durationMillis = 400),
+//        label = ""
+//    )
+//
+//    // Update lastQuote after animation completes
+//    LaunchedEffect(currentQuote) {
+//        lastQuote = currentQuote
+//    }
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(16.dp),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center
+//    ) {
+//        Card(
+//            modifier = Modifier
+//                .padding(16.dp)
+//                .width(300.dp),
+//            elevation = CardDefaults.cardElevation(6.dp),
+//            shape = RoundedCornerShape(12.dp),
+//            colors = CardDefaults.cardColors(containerColor = Color(0xFFF1E9F9))
+//        ) {
+//            Column(modifier = Modifier.alpha(alpha)) {
+//                Text(
+//                    text = currentQuote.first,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 16.dp, vertical = 12.dp),
+//                    style = TextStyle(
+//                        fontSize = 16.sp,
+//                        fontStyle = FontStyle.Italic,
+//                        fontWeight = FontWeight.Medium,
+//                        textAlign = TextAlign.Center
+//                    )
+//                )
+//                Text(
+//                    text = currentQuote.second,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 16.dp, vertical = 8.dp),
+//                    fontSize = 12.sp,
+//                    textAlign = TextAlign.End
+//                )
+//            }
+//        }
+//
+//        Spacer(modifier = Modifier.height(16.dp))
+//
+//        Button(
+//            onClick = {
+//                var next = quotes.random()
+//                while (next == currentQuote) {
+//                    next = quotes.random()
+//                }
+//                currentQuote = next
+//            },
+//            modifier = Modifier.clip(RoundedCornerShape(50))
+//        ) {
+//            Text(
+//                text = "Next Quote",
+//                fontWeight = FontWeight.Bold,
+//                color = Color.White
+//            )
+//        }
+//    }
 
-    val quotes = listOf(
-        "Believe you can and you're halfway there." to "- Theodore Roosevelt",
-        "Everything you can imagine is real." to "- Pablo Picasso",
-        "Do what you can, with what you have, where you are." to "- T. Roosevelt",
-        "What we think, we become." to "- Buddha"
-    )
+    // TextFields, Buttons and showing snackbars
 
-    var currentQuote by remember { mutableStateOf(quotes.random()) }
-    var lastQuote by remember { mutableStateOf(currentQuote) }
+//    val snackbarHostState = remember { SnackbarHostState() }
+//    val scope = rememberCoroutineScope()
+//    var text by remember { mutableStateOf("") }
+//
+//    Scaffold(
+//        snackbarHost = { SnackbarHost(snackbarHostState) }
+//    ){ innerPadding ->
+//
+//        Column(
+//            modifier = Modifier
+//                .padding(innerPadding)
+//                .padding(16.dp)
+//                .fillMaxSize(),
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//
+//            Text(
+//                text = "Feedback form",
+//                modifier = Modifier.padding(innerPadding),
+//                fontSize = 24.sp,
+//                fontWeight = FontWeight.Bold
+//            )
+//
+//            Spacer(modifier = Modifier.height(36.dp))
+//
+//            TextField(
+//                value = text,
+//                onValueChange = { text = it },
+//                label = { Text("Enter your feedback!") },
+//                modifier = Modifier.wrapContentWidth(),
+//                maxLines = 1
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//            Button(
+//                onClick = {
+//                    scope.launch {
+//                        if (text.isBlank()) {
+//                            snackbarHostState.showSnackbar("Please enter some feedback!")
+//                        }
+//                        else {
+//                            snackbarHostState.showSnackbar("Thanks for your feedback!")
+//                        }
+//                    }
+//                },
+//            ) {
+//                Text("Submit")
+//            }
+//        }
+//
+//    }
 
-    val alpha by animateFloatAsState(
-        targetValue = if (currentQuote != lastQuote) 0f else 1f,
-        animationSpec = tween(durationMillis = 400),
-        label = ""
-    )
+    // effect handlers in compose
 
-    // Update lastQuote after animation completes
-    LaunchedEffect(currentQuote) {
-        lastQuote = currentQuote
-    }
+//    val seconds = 10
+//
+//    LaunchedEffect(seconds) {
+//        delay(1000)
+//        println("1 second passed, seconds left: $seconds")
+//    }
+//
+//    Text("Time left: $seconds")
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Card(
-            modifier = Modifier
-                .padding(16.dp)
-                .width(300.dp),
-            elevation = CardDefaults.cardElevation(6.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFF1E9F9))
-        ) {
-            Column(modifier = Modifier.alpha(alpha)) {
-                Text(
-                    text = currentQuote.first,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontStyle = FontStyle.Italic,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
-                    )
-                )
-                Text(
-                    text = currentQuote.second,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.End
-                )
-            }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+//    val snackbarHostState = remember { SnackbarHostState() }
+//
+//    Scaffold(
+//
+//        snackbarHost = { SnackbarHost(snackbarHostState) }
+//
+//    ) { innerPadding ->
+//
+//        val context = LocalContext.current
+//        val scope = rememberCoroutineScope()
+//
+//
+//        Box(
+//            modifier.fillMaxSize(),
+//            contentAlignment = Alignment.Center
+//        ) {
+//
+//            LaunchedEffect(Unit) {
+//                Toast.makeText(context, "Welcome!", Toast.LENGTH_SHORT).show()
+//            }
+//
+//            Button(
+//                onClick = {
+//                    scope.launch {
+//                        snackbarHostState.showSnackbar("Welcome!")
+//                    }
+//                },
+//                modifier.padding(innerPadding)
+//            ) {
+//                Text(
+//                    "Click Me"
+//                )
+//            }
+//
+//        }
+//    }
 
-        Button(
-            onClick = {
-                var next = quotes.random()
-                while (next == currentQuote) {
-                    next = quotes.random()
-                }
-                currentQuote = next
-            },
-            modifier = Modifier.clip(RoundedCornerShape(50))
-        ) {
-            Text(
-                text = "Next Quote",
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-        }
-    }
+    // animation in compose
 
+//    var expanded by remember {mutableStateOf(false)}
+//    val size by animateDpAsState(
+//        targetValue = if (expanded) 200.dp else 100.dp,
+//        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
+//        label = ""
+//    )
+//
+//    Box(
+//        modifier.fillMaxSize().background(Color.Black),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Box(
+//            modifier = Modifier
+//                .size(size)
+//                .background(Color.Blue)
+//                .clickable { expanded = !expanded }
+//        )
+//    }
+
+//    var visible by remember { mutableStateOf(false) }
+//
+//    Column {
+//        Button(onClick = { visible = !visible }) {
+//            Text("Toggle")
+//        }
+//
+//        AnimatedVisibility(visible = visible) {
+//            Text("Hello!", fontSize = 24.sp)
+//        }
+//    }
+
+//    val infiniteTransition = rememberInfiniteTransition()
+//
+//    val alpha by infiniteTransition.animateFloat(
+//        initialValue = 0.3f,
+//        targetValue = 1f,
+//        animationSpec = infiniteRepeatable(
+//            animation = tween(durationMillis = 1000),
+//            repeatMode = RepeatMode.Reverse
+//        ),
+//        label = ""
+//    )
+//
+//    Box(
+//        modifier = Modifier
+//            .size(100.dp)
+//            .graphicsLayer { this.alpha = alpha }
+//            .background(Color.Red)
+//    )
+
+//    var state by remember{mutableStateOf(false)}
+//    val transition = updateTransition(targetState = state)
+//
+//    val color by transition.animateColor {
+//        if(it) Color.Red else Color.Green
+//    }
+//
+//    val size by transition.animateDp {
+//        if(it) 100.dp else 200.dp
+//    }
+//
+//    Box(
+//        modifier = Modifier
+//            .size(size)
+//            .background(color)
+//            .clickable { state = !state }
+//    )
+
+//    var liked by remember { mutableStateOf(false) }
+//    var showPlusOne by remember { mutableStateOf(false) }
+//
+//    val transition = updateTransition(targetState = liked, label = "liked")
+//
+//    val color by transition.animateColor(label = "color") {
+//        if (it) Color(0xFFEF3B53) else Color.Gray
+//    }
+//
+//    val size by transition.animateDp(label = "size") {
+//        if (it) 125.dp else 100.dp
+//    }
+//
+//    val offsetY = remember { Animatable(0f) }
+//    val alpha = remember { Animatable(0f) }
+//
+//    LaunchedEffect(showPlusOne) {
+//        if (showPlusOne) {
+//            offsetY.snapTo(0f)
+//            alpha.snapTo(1f)
+//
+//            launch {
+//                offsetY.animateTo(
+//                    targetValue = -100f,
+//                    animationSpec = tween(600)
+//                )
+//            }
+//
+//            launch {
+//                alpha.animateTo(
+//                    targetValue = 0f,
+//                    animationSpec = tween(600)
+//                )
+//            }
+//
+//            delay(600)
+//            showPlusOne = false
+//        }
+//    }
+//
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize(),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Box(
+//            contentAlignment = Alignment.Center
+//        ) {
+//            if (showPlusOne) {
+//                Text(
+//                    text = "+1",
+//                    fontSize = 34.sp,
+//                    color = Color(0xFFEF3B53),
+//                    modifier = Modifier
+//                        .offset { IntOffset(0, offsetY.value.toInt()) }
+//                        .alpha(alpha.value)
+//                )
+//            }
+//
+//            Icon(
+//                imageVector = Icons.Default.Favorite,
+//                contentDescription = "Like",
+//                tint = color,
+//                modifier = Modifier
+//                    .size(size)
+//                    .clickable {
+//                        if (!liked) {
+//                            liked = true
+//                            showPlusOne = true
+//                        } else {
+//                            liked = false
+//                        }
+//                    }
+//            )
+//        }
+//    }
 }
