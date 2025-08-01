@@ -1,64 +1,26 @@
 package com.example.composepractice
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import androidx.core.app.ActivityCompat
 import com.example.composepractice.ui.theme.ComposePracticeTheme
+import com.google.firebase.messaging.FirebaseMessaging
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -72,6 +34,7 @@ class MainActivity : ComponentActivity() {
                 App()
             }
         }
+
     }
 }
 
@@ -848,374 +811,470 @@ fun App(modifier: Modifier = Modifier) {
 //        }
 //    }
 
-    @Composable
-    fun TopAppBar(username: String){
+//    @Composable
+//    fun TopAppBar(username: String){
+//
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(16.dp),
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            verticalAlignment = Alignment.CenterVertically
+//
+//        ) {
+//
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier.padding(top = 8.dp)
+//            ) {
+//
+//                Text(
+//                    text = username,
+//                    fontWeight = FontWeight.Bold,
+//                    fontSize = 23.sp
+//                )
+//                Icon(
+//                    imageVector = Icons.Default.KeyboardArrowDown,
+//                    contentDescription = "Notifications",
+//                    modifier = Modifier.size(24.dp)
+//                )
+//                Canvas(
+//                    modifier = Modifier.size(14.dp)
+//                ) {
+//                    drawCircle(
+//                        color = Color.Red,
+//                        radius = 10f
+//                    )
+//                }
+//            }
+//
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,modifier = Modifier.padding(top = 8.dp)
+//            ) {
+//
+//                Icon(
+//                    painter = painterResource(R.drawable.threads),
+//                    contentDescription = "Threads",
+//                    modifier = Modifier
+//                        .size(24.dp)
+//                        .clip(RoundedCornerShape(15.dp)),
+//                    tint = Color.Black
+//                )
+//                Box(
+//                    modifier = Modifier
+//                        .align(Alignment.Top)
+//                        .offset(x = 0.dp, y = (-6).dp)
+//                        .background(Color.Red, shape = CircleShape)
+//                        .padding(horizontal = 5.dp, vertical = 2.dp),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text(
+//                        text = "9+",
+//                        style = MaterialTheme.typography.labelSmall.copy(
+//                            color = Color.White,
+//                            fontSize = 10.sp,
+//                            fontWeight = FontWeight.Bold
+//                        )
+//                    )
+//                }
+//                Spacer(modifier = Modifier.width(19.dp))
+//                Icon(
+//                    painter = painterResource(R.drawable.more),
+//                    contentDescription = "Post",
+//                    modifier = Modifier.size(24.dp),
+//                    tint = Color.Black
+//                )
+//                Box(
+//                    modifier = Modifier
+//                        .align(Alignment.Top),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Canvas(
+//                        modifier = Modifier.size(2.dp)
+//                    ) {
+//                        drawCircle(
+//                            color = Color.Red,
+//                            radius = 12f
+//                        )
+//                    }
+//
+//                }
+//                Spacer(modifier = Modifier.width(19.dp))
+//                Icon(
+//                    painter = painterResource(R.drawable.density_medium_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
+//                    contentDescription = "Menu",
+//                    modifier = Modifier.size(24.dp),
+//                    tint = Color.Black
+//                )
+//            }
+//        }
+//    }
+//
+//    @Composable
+//    fun StatItem(count: Int, label: String) {
+//        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//            Text(text = count.toString(), fontWeight = FontWeight.Bold)
+//            Text(text = label)
+//        }
+//    }
+//
+//    @Composable
+//    fun ProfileSection(
+//        name: String,
+//        bio: String,
+//        posts: Int,
+//        followers: Int,
+//        following: Int
+//    ) {
+//
+//        Column(
+//            modifier = Modifier.padding(16.dp)
+//        ) {
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//
+//                Image(
+//                    painter = painterResource(R.drawable.user),
+//                    contentDescription = "Profile Image",
+//                    modifier = Modifier
+//                        .size(75.dp)
+//                        .clip(CircleShape)
+//
+//                )
+//                Spacer(modifier = Modifier.width(12.dp))
+//
+//                Column {
+//                    Row(
+//                        modifier = Modifier.fillMaxWidth().padding(start = 36.dp).padding(bottom = 8.dp)
+//                    ) {
+//
+//                        Text(text = name, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+//
+//                    }
+//                    Spacer(modifier = Modifier.height(4.dp))
+//                    // Stats
+//                    Row(
+//                        horizontalArrangement = Arrangement.spacedBy(35.dp),
+//                        modifier = Modifier.fillMaxWidth().padding(start = 36.dp)
+//                    ) {
+//                        StatItem(count = posts, label = "posts")
+//                        StatItem(count = followers, label = "followers")
+//                        StatItem(count = following, label = "following")
+//                    }
+//                }
+//
+//            }
+//            Spacer(modifier = Modifier.height(15.dp))
+//
+//            // Bio
+//
+//            Text(text = bio)
+//
+//            Spacer(modifier = Modifier.height(12.dp))
+//
+//            Row(
+//                horizontalArrangement = Arrangement.spacedBy(8.dp),
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                Icon(
+//                    painter = painterResource(R.drawable.link),
+//                    contentDescription = "Edit Profile",
+//                    tint = Color.Black,
+//                    modifier = Modifier.size(15.dp)
+//                )
+//
+//                Text(
+//                    "x.com/@Adityaastwt and 2 more",
+//                    color = Color.Black,
+//                    fontWeight = FontWeight.Bold
+//                )
+//            }
+//
+//            Spacer(modifier = Modifier.height(10.dp))
+//
+//            Row(
+//                horizontalArrangement = Arrangement.spacedBy(8.dp),
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                Icon(
+//                    painter = painterResource(R.drawable.threads),
+//                    contentDescription = "Edit Profile",
+//                    tint = Color.Black,
+//                    modifier = Modifier.size(15.dp)
+//                )
+//
+//                Text(
+//                    "adityamore1875",
+//                    color = Color.Black,
+//                    fontWeight = FontWeight.Bold
+//                )
+//            }
+//
+//            Spacer(modifier = Modifier.height(15.dp))
+//
+//            Row(
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                // Edit Profile Button
+//                OutlinedButton(
+//                    onClick = { /* Your action */ },
+//                    border = BorderStroke(1.dp, Color.LightGray.copy(0.6f)), // make border transparent
+//                    colors = ButtonDefaults.outlinedButtonColors(
+//                        containerColor = Color.LightGray.copy(0.6f), // or whatever background you want
+//                        contentColor = Color.Black
+//                    ),
+//                    modifier = Modifier
+//                        .height(32.dp)
+//                        .width(140.dp),
+//                    shape = RoundedCornerShape(8.dp), // optional: custom shape
+//                ) {
+//                    Text("Edit Profile", fontSize = 12.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+//                }
+//
+//                Spacer(modifier = Modifier.width(5.dp))
+//                OutlinedButton(
+//                    onClick = { /* Your action */ },
+//                    border = BorderStroke(1.dp, Color.LightGray.copy(0.6f)), // make border transparent
+//                    colors = ButtonDefaults.outlinedButtonColors(
+//                        containerColor = Color.LightGray.copy(0.6f), // or whatever background you want
+//                        contentColor = Color.Black
+//                    ),
+//                    modifier = Modifier
+//                        .height(32.dp)
+//                        .width(140.dp),
+//                    shape = RoundedCornerShape(8.dp), // optional: custom shape
+//                ) {
+//                    Text("Share Profile", fontSize = 12.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+//                }
+//
+//                Spacer(modifier = Modifier.width(5.dp))
+//
+//                OutlinedButton(
+//                    onClick = { /* Your action */ },
+//                    border = BorderStroke(1.dp, Color.LightGray.copy(0.6f)), // make border transparent
+//                    colors = ButtonDefaults.outlinedButtonColors(
+//                        containerColor = Color.LightGray.copy(0.6f), // or whatever background you want
+//                        contentColor = Color.Black
+//                    ),
+//                    modifier = Modifier
+//                        .height(32.dp),
+//                    shape = RoundedCornerShape(8.dp),
+//                ) {
+//
+//                    Icon(
+//                        painter = painterResource(R.drawable.add),
+//                        contentDescription = "Menu",
+//                        modifier = Modifier.size(18.dp),
+//                        tint = Color.Black
+//                    )
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
+//
+//    @Composable
+//    fun PostsGrid(
+//        posts: List<String>,
+//        modifier: Modifier = Modifier
+//    ) {
+//        LazyVerticalGrid(
+//            columns = GridCells.Fixed(3),
+//            modifier = modifier,
+//            contentPadding = PaddingValues(1.dp),
+//            verticalArrangement = Arrangement.spacedBy(1.dp),
+//            horizontalArrangement = Arrangement.spacedBy(1.dp)
+//        ) {
+//            items(posts) { imageUrl ->
+//                AsyncImage(
+//                    model = imageUrl,
+//                    contentDescription = "Post",
+//                    contentScale = ContentScale.Crop,
+//                    modifier = Modifier
+//                        .aspectRatio(1f)
+//                        .background(Color.LightGray)
+//                )
+//            }
+//        }
+//    }
+//
+//
+//    data class StoryHighlight(
+//        val imageUrl: String,
+//        val label: String
+//    )
+//
+//    @Composable
+//    fun StoryHighlightRow(
+//        highlights: List<StoryHighlight>,
+//        modifier: Modifier = Modifier
+//    ) {
+//        LazyRow(
+//            modifier = modifier.padding(horizontal = 16.dp),
+//            horizontalArrangement = Arrangement.spacedBy(12.dp)
+//        ) {
+//            items(highlights) { highlight ->
+//                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//                    AsyncImage(
+//                        model = highlight.imageUrl,
+//                        contentDescription = highlight.label,
+//                        contentScale = ContentScale.Crop,
+//                        modifier = Modifier
+//                            .size(70.dp)
+//                            .clip(CircleShape)
+//                            .border(2.dp, Color.LightGray, CircleShape)
+//                    )
+//                    Spacer(modifier = Modifier.height(6.dp))
+//                    Text(
+//                        text = highlight.label,
+//                        style = MaterialTheme.typography.bodySmall,
+//                        maxLines = 1,
+//                        overflow = TextOverflow.Ellipsis
+//                    )
+//                }
+//            }
+//        }
+//    }
+//
+//
+//    @Composable
+//    fun InstagramProfileScreen() {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .consumeWindowInsets(WindowInsets.systemBars)
+//                .verticalScroll(rememberScrollState())
+//        ) {
+//
+//            TopAppBar(username = "adityamore1875")
+//            Spacer(modifier = Modifier.height(16.dp))
+//            ProfileSection(
+//                "Aditya More",
+//                "Chasing ideas, debugging life, and breathing fresh air when i remember to",
+//                posts = 0,
+//                followers = 202,
+//                following = 1313
+//            )
+//            Spacer(modifier = Modifier.height(10.dp))
+//
+//            val dummyHighlights = listOf(
+//                StoryHighlight("https://randomuser.me/api/portraits/men/5.jpg", "New"),
+//                StoryHighlight("https://randomuser.me/api/portraits/women/1.jpg", "💛"),
+//                StoryHighlight("https://randomuser.me/api/portraits/men/2.jpg", "🖤"),
+//                StoryHighlight("https://randomuser.me/api/portraits/women/3.jpg", "🏏"),
+//                StoryHighlight("https://randomuser.me/api/portraits/men/4.jpg", "🎶"),
+//            )
+//
+//            StoryHighlightRow(highlights = dummyHighlights)
+//
+//            Spacer(modifier = Modifier.height(6.dp))
+//
+//            val dummyPosts = List(30) { index ->
+//                "https://picsum.photos/300/300?random=$index"
+//            }
+//
+//
+//        }
+//    }
+//
+//    InstagramProfileScreen()
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
 
-        ) {
+    // Bottom navigation with fab insertion
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-
-                Text(
-                    text = username,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 23.sp
-                )
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Notifications",
-                    modifier = Modifier.size(24.dp)
-                )
-                Canvas(
-                    modifier = Modifier.size(14.dp)
-                ) {
-                    drawCircle(
-                        color = Color.Red,
-                        radius = 10f
-                    )
-                }
-            }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,modifier = Modifier.padding(top = 8.dp)
-            ) {
-
-                Icon(
-                    painter = painterResource(R.drawable.threads),
-                    contentDescription = "Threads",
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(RoundedCornerShape(15.dp)),
-                    tint = Color.Black
-                )
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.Top)
-                        .offset(x = 0.dp, y = (-6).dp)
-                        .background(Color.Red, shape = CircleShape)
-                        .padding(horizontal = 5.dp, vertical = 2.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "9+",
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            color = Color.White,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                }
-                Spacer(modifier = Modifier.width(19.dp))
-                Icon(
-                    painter = painterResource(R.drawable.more),
-                    contentDescription = "Post",
-                    modifier = Modifier.size(24.dp),
-                    tint = Color.Black
-                )
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.Top),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Canvas(
-                        modifier = Modifier.size(2.dp)
-                    ) {
-                        drawCircle(
-                            color = Color.Red,
-                            radius = 12f
-                        )
-                    }
-
-                }
-                Spacer(modifier = Modifier.width(19.dp))
-                Icon(
-                    painter = painterResource(R.drawable.density_medium_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
-                    contentDescription = "Menu",
-                    modifier = Modifier.size(24.dp),
-                    tint = Color.Black
-                )
-            }
-        }
-    }
-
-    @Composable
-    fun StatItem(count: Int, label: String) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = count.toString(), fontWeight = FontWeight.Bold)
-            Text(text = label)
-        }
-    }
-
-    @Composable
-    fun ProfileSection(
-        name: String,
-        bio: String,
-        posts: Int,
-        followers: Int,
-        following: Int
-    ) {
-
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Image(
-                    painter = painterResource(R.drawable.user),
-                    contentDescription = "Profile Image",
-                    modifier = Modifier
-                        .size(75.dp)
-                        .clip(CircleShape)
-
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                
-                Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(start = 36.dp).padding(bottom = 8.dp)
-                    ) {
-
-                        Text(text = name, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                        
-                    }
-                    Spacer(modifier = Modifier.height(4.dp))
-                    // Stats
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(35.dp),
-                        modifier = Modifier.fillMaxWidth().padding(start = 36.dp)
-                    ) {
-                        StatItem(count = posts, label = "posts")
-                        StatItem(count = followers, label = "followers")
-                        StatItem(count = following, label = "following")
-                    }
-                }
-
-            }
-            Spacer(modifier = Modifier.height(15.dp))
-
-            // Bio
-
-            Text(text = bio)
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.link),
-                    contentDescription = "Edit Profile",
-                    tint = Color.Black,
-                    modifier = Modifier.size(15.dp)
-                )
-
-                Text(
-                    "x.com/@Adityaastwt and 2 more",
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.threads),
-                    contentDescription = "Edit Profile",
-                    tint = Color.Black,
-                    modifier = Modifier.size(15.dp)
-                )
-
-                Text(
-                    "adityamore1875",
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // Edit Profile Button
-                OutlinedButton(
-                    onClick = { /* Your action */ },
-                    border = BorderStroke(1.dp, Color.LightGray.copy(0.6f)), // make border transparent
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = Color.LightGray.copy(0.6f), // or whatever background you want
-                        contentColor = Color.Black
-                    ),
-                    modifier = Modifier
-                        .height(32.dp)
-                        .width(140.dp),
-                    shape = RoundedCornerShape(8.dp), // optional: custom shape
-                ) {
-                    Text("Edit Profile", fontSize = 12.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-                }
-
-                Spacer(modifier = Modifier.width(5.dp))
-                OutlinedButton(
-                    onClick = { /* Your action */ },
-                    border = BorderStroke(1.dp, Color.LightGray.copy(0.6f)), // make border transparent
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = Color.LightGray.copy(0.6f), // or whatever background you want
-                        contentColor = Color.Black
-                    ),
-                    modifier = Modifier
-                        .height(32.dp)
-                        .width(140.dp),
-                    shape = RoundedCornerShape(8.dp), // optional: custom shape
-                ) {
-                    Text("Share Profile", fontSize = 12.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-                }
-
-                Spacer(modifier = Modifier.width(5.dp))
-
-                OutlinedButton(
-                    onClick = { /* Your action */ },
-                    border = BorderStroke(1.dp, Color.LightGray.copy(0.6f)), // make border transparent
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = Color.LightGray.copy(0.6f), // or whatever background you want
-                        contentColor = Color.Black
-                    ),
-                    modifier = Modifier
-                        .height(32.dp),
-                    shape = RoundedCornerShape(8.dp),
-                ) {
-
-                    Icon(
-                        painter = painterResource(R.drawable.add),
-                        contentDescription = "Menu",
-                        modifier = Modifier.size(18.dp),
-                        tint = Color.Black
-                    )
-                }
-
-            }
-
-        }
-
-    }
-
-    @Composable
-    fun PostsGrid(
-        posts: List<String>,
-        modifier: Modifier = Modifier
-    ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            modifier = modifier,
-            contentPadding = PaddingValues(1.dp),
-            verticalArrangement = Arrangement.spacedBy(1.dp),
-            horizontalArrangement = Arrangement.spacedBy(1.dp)
-        ) {
-            items(posts) { imageUrl ->
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = "Post",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .background(Color.LightGray)
-                )
-            }
-        }
-    }
-
-
-    data class StoryHighlight(
-        val imageUrl: String,
-        val label: String
-    )
-
-    @Composable
-    fun StoryHighlightRow(
-        highlights: List<StoryHighlight>,
-        modifier: Modifier = Modifier
-    ) {
-        LazyRow(
-            modifier = modifier.padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(highlights) { highlight ->
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    AsyncImage(
-                        model = highlight.imageUrl,
-                        contentDescription = highlight.label,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(70.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, Color.LightGray, CircleShape)
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = highlight.label,
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-        }
-    }
-
-
-    @Composable
-    fun InstagramProfileScreen() {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .consumeWindowInsets(WindowInsets.systemBars)
-                .verticalScroll(rememberScrollState())
-        ) {
-
-            TopAppBar(username = "adityamore1875")
-            Spacer(modifier = Modifier.height(16.dp))
-            ProfileSection(
-                "Aditya More",
-                "Chasing ideas, debugging life, and breathing fresh air when i remember to",
-                posts = 0,
-                followers = 202,
-                following = 1313
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-
-            val dummyHighlights = listOf(
-                StoryHighlight("https://randomuser.me/api/portraits/men/5.jpg", "New"),
-                StoryHighlight("https://randomuser.me/api/portraits/women/1.jpg", "💛"),
-                StoryHighlight("https://randomuser.me/api/portraits/men/2.jpg", "🖤"),
-                StoryHighlight("https://randomuser.me/api/portraits/women/3.jpg", "🏏"),
-                StoryHighlight("https://randomuser.me/api/portraits/men/4.jpg", "🎶"),
-            )
-
-            StoryHighlightRow(highlights = dummyHighlights)
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            val dummyPosts = List(30) { index ->
-                "https://picsum.photos/300/300?random=$index"
-            }
-
-
-        }
-    }
-
-    InstagramProfileScreen()
+//    @Composable
+//    fun CustomBottomNavWithFab(
+//        selectedIndex: Int,
+//        onTabSelected: (Int) -> Unit,
+//        onFabClick: () -> Unit
+//    ) {
+//        val items = listOf("Home", "Profile")
+//
+//        Box {
+//            // Bottom Navigation Background + Items
+//            Surface(
+//                color = Color(0xFFF2EAFB),
+//                tonalElevation = 4.dp,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(72.dp)
+//                    .align(Alignment.BottomCenter),
+//                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+//            ) {
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(horizontal = 32.dp),
+//                    horizontalArrangement = Arrangement.SpaceEvenly,
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    items.forEachIndexed { index, item ->
+//                        if (index == 1) {
+//                            // Spacer for FAB
+//                            Spacer(modifier = Modifier.width(32.dp))
+//                        }
+//
+//                        Column(
+//                            horizontalAlignment = Alignment.CenterHorizontally,
+//                            modifier = Modifier.clickable { onTabSelected(index) }
+//                        ) {
+//                            val icon = when (item) {
+//                                "Home" -> Icons.Default.Home
+//                                "Profile" -> Icons.Default.Person
+//                                else -> Icons.Default.Home
+//                            }
+//
+//                            Icon(
+//                                imageVector = icon,
+//                                contentDescription = item,
+//                                tint = if (index == selectedIndex) Color(0xFF6A1B9A) else Color.Gray
+//                            )
+//                            Text(
+//                                text = item,
+//                                fontSize = 12.sp,
+//                                color = if (index == selectedIndex) Color(0xFF6A1B9A) else Color.Gray
+//                            )
+//                        }
+//                    }
+//                }
+//            }
+//
+//            // FAB
+//            FloatingActionButton(
+//                onClick = onFabClick,
+//                containerColor = Color(0xFF6A1B9A),
+//                contentColor = Color.White,
+//                shape = CircleShape,
+//                modifier = Modifier
+//                    .align(Alignment.BottomCenter)
+//                    .offset(y = (-28).dp)
+//            ) {
+//                Icon(Icons.Default.Add, contentDescription = "Add")
+//            }
+//        }
+//    }
+//
+//    var selectedTab by remember { mutableIntStateOf(0) }
+//
+//    Scaffold(
+//        bottomBar = {
+//            CustomBottomNavWithFab(
+//                selectedIndex = selectedTab,
+//                onTabSelected = { selectedTab = it },
+//                onFabClick = { /* fab action */ }
+//            )
+//        }
+//    ) { innerPadding ->
+//
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(innerPadding)
+//        ) {
+//            // Your content goes here
+//        }
+//    }
 }
